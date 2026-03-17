@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Bro Co. | Engineers & Contractors</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #D0202A;
+    --navy: #1A1F5E;
+    --gold: #C8A84B;
+    --cream: #F5F0E8;
+    --charcoal: #1C1C1C;
+    --light: #F9F7F3;
+    --mid: #6B6B6B;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--charcoal);
+    color: var(--light);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed; width: 12px; height: 12px;
+    background: var(--red); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transition: transform 0.1s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed; width: 40px; height: 40px;
+    border: 1px solid rgba(208,32,42,0.5);
+    border-radius: 50%; pointer-events: none;
+    z-index: 9998; transition: all 0.15s ease;
+  }
+
+  /* LOADER */
+  #loader {
+    position: fixed; inset: 0;
+    background: var(--charcoal); z-index: 10000;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 20px;
+  }
+  .loader-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 5rem; color: var(--red);
+    letter-spacing: 8px;
+    animation: pulse 1s ease-in-out infinite;
+  }
+  .loader-bar {
+    width: 200px; height: 2px;
+    background: rgba(255,255,255,0.1);
+    position: relative; overflow: hidden;
+  }
+  .loader-bar::after {
+    content: ''; position: absolute;
+    left: -100%; top: 0; width: 100%; height: 100%;
+    background: var(--red);
+    animation: load 1.8s ease forwards;
+  }
+  @keyframes load { to { left: 0; } }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .loader-out { animation: loaderExit 0.8s ease 2s forwards; }
+  @keyframes loaderExit { to { opacity: 0; pointer-events: none; visibility: hidden; } }
+
+  /* NAVBAR */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 1000; padding: 24px 60px;
+    display: flex; justify-content: space-between; align-items: center;
+    transition: all 0.4s ease;
+  }
+  nav.scrolled {
+    background: rgba(28,28,28,0.95);
+    backdrop-filter: blur(20px);
+    padding: 16px 60px;
+    border-bottom: 1px solid rgba(208,32,42,0.2);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem; letter-spacing: 3px;
+    color: var(--light);
+  }
+  .nav-logo span { color: var(--red); }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    color: rgba(255,255,255,0.7); text-decoration: none;
+    font-size: 0.8rem; font-weight: 500; letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute;
+    bottom: -4px; left: 0; width: 0; height: 1px;
+    background: var(--red); transition: width 0.3s;
+  }
+  .nav-links a:hover { color: #fff; }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    background: var(--red); color: #fff !important;
+    padding: 10px 24px !important; border-radius: 2px !important;
+  }
+  .nav-cta::after { display: none !important; }
+  .nav-cta:hover { background: #b01820 !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; position: relative;
+    display: flex; align-items: center;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: 
+      linear-gradient(rgba(208,32,42,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(208,32,42,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridMove 20s linear infinite;
+  }
+  @keyframes gridMove { to { background-position: 60px 60px; } }
+  
+  .hero-shapes {
+    position: absolute; inset: 0; overflow: hidden;
+  }
+  .shape {
+    position: absolute; opacity: 0.06;
+    border: 1px solid var(--red);
+  }
+  .shape-1 {
+    width: 400px; height: 400px;
+    right: 10%; top: 10%;
+    transform: rotate(15deg);
+    animation: rotate1 25s linear infinite;
+  }
+  .shape-2 {
+    width: 200px; height: 200px;
+    right: 20%; top: 30%;
+    transform: rotate(-20deg);
+    animation: rotate2 18s linear infinite;
+  }
+  .shape-3 {
+    width: 600px; height: 600px;
+    right: -100px; bottom: -100px;
+    border: 2px solid var(--gold);
+    opacity: 0.04;
+    animation: rotate1 35s linear infinite reverse;
+  }
+  @keyframes rotate1 { to { transform: rotate(375deg); } }
+  @keyframes rotate2 { to { transform: rotate(-380deg); } }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    padding: 0 60px; max-width: 900px;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--red); margin-bottom: 24px;
+    opacity: 0; animation: fadeUp 0.8s ease 2.2s forwards;
+  }
+  .hero-tag::before {
+    content: ''; display: block;
+    width: 40px; height: 1px; background: var(--red);
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 9vw, 9rem);
+    line-height: 0.9; letter-spacing: 2px;
+    margin-bottom: 32px;
+  }
+  .hero-title .line {
+    display: block; overflow: hidden;
+  }
+  .hero-title .line span {
+    display: block;
+    transform: translateY(110%);
+    animation: slideUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+  .hero-title .line:nth-child(1) span { animation-delay: 2.3s; }
+  .hero-title .line:nth-child(2) span { animation-delay: 2.45s; }
+  .hero-title .line:nth-child(3) span { animation-delay: 2.6s; }
+  .accent-red { color: var(--red); }
+  .accent-gold { color: var(--gold); }
+  
+  .hero-desc {
+    font-size: 1.1rem; color: rgba(255,255,255,0.6);
+    max-width: 520px; line-height: 1.8; margin-bottom: 48px;
+    opacity: 0; animation: fadeUp 0.8s ease 3s forwards;
+  }
+  .hero-buttons {
+    display: flex; gap: 20px;
+    opacity: 0; animation: fadeUp 0.8s ease 3.2s forwards;
+  }
+  .btn-primary {
+    background: var(--red); color: #fff;
+    padding: 16px 40px; border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    cursor: none; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 12px;
+    transition: all 0.3s;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+  .btn-primary:hover { background: #b01820; transform: translateY(-2px); }
+  .btn-outline {
+    background: transparent; color: #fff;
+    padding: 16px 40px;
+    border: 1px solid rgba(255,255,255,0.2);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem; font-weight: 500;
+    letter-spacing: 2px; text-transform: uppercase;
+    cursor: none; text-decoration: none;
+    transition: all 0.3s;
+  }
+  .btn-outline:hover {
+    border-color: var(--red); color: var(--red);
+    transform: translateY(-2px);
+  }
+
+  .hero-stats {
+    position: absolute; right: 60px; bottom: 80px;
+    display: flex; gap: 60px; z-index: 2;
+    opacity: 0; animation: fadeUp 0.8s ease 3.4s forwards;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem; color: var(--red);
+    line-height: 1; display: block;
+  }
+  .stat-label {
+    font-size: 0.7rem; letter-spacing: 2px;
+    text-transform: uppercase; color: rgba(255,255,255,0.4);
+    margin-top: 4px;
+  }
+
+  .scroll-indicator {
+    position: absolute; bottom: 40px; left: 60px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 0.7rem; letter-spacing: 3px;
+    text-transform: uppercase; color: rgba(255,255,255,0.3);
+    z-index: 2;
+    opacity: 0; animation: fadeUp 0.8s ease 3.6s forwards;
+  }
+  .scroll-line {
+    width: 40px; height: 1px; background: rgba(255,255,255,0.2);
+    position: relative; overflow: hidden;
+  }
+  .scroll-line::after {
+    content: ''; position: absolute;
+    top: 0; left: -100%; width: 100%; height: 100%;
+    background: var(--red);
+    animation: scrollAnim 2s ease 4s infinite;
+  }
+  @keyframes scrollAnim { 0%{left:-100%} 50%,100%{left:100%} }
+
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideUp { to { transform: translateY(0); } }
+
+  /* SECTIONS */
+  section { padding: 120px 60px; }
+
+  .section-tag {
+    font-size: 0.7rem; letter-spacing: 5px;
+    text-transform: uppercase; color: var(--red);
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px;
+  }
+  .section-tag::before { content:''; width:30px; height:1px; background:var(--red); }
+  
+  h2.section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1.1; margin-bottom: 24px;
+  }
+
+  /* ABOUT */
+  .about { background: var(--charcoal); }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center; margin-top: 60px;
+  }
+  .about-left { position: relative; }
+  .about-img-wrap {
+    position: relative;
+    aspect-ratio: 3/4; overflow: hidden;
+  }
+  .about-img-wrap::before {
+    content: ''; position: absolute;
+    inset: -2px; background: linear-gradient(135deg, var(--red), var(--navy));
+    z-index: -1;
+  }
+  .about-img-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    filter: grayscale(20%);
+    transition: filter 0.5s;
+  }
+  .about-img-wrap:hover img { filter: grayscale(0%); }
+  .about-badge {
+    position: absolute; bottom: -30px; right: -30px;
+    width: 140px; height: 140px;
+    background: var(--red);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .badge-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem; line-height: 1;
+  }
+  .badge-text { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; }
+  .about-right {}
+  .about-desc { color: rgba(255,255,255,0.6); line-height: 1.9; margin-bottom: 40px; }
+  .about-mission {
+    border-left: 3px solid var(--red); padding-left: 24px;
+    margin-bottom: 40px;
+  }
+  .mission-label {
+    font-size: 0.7rem; letter-spacing: 3px; color: var(--red);
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .mission-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem; color: var(--gold); font-style: italic;
+    line-height: 1.4;
+  }
+  .about-details { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .detail-item { }
+  .detail-label {
+    font-size: 0.65rem; letter-spacing: 2px;
+    color: rgba(255,255,255,0.3); text-transform: uppercase; margin-bottom: 4px;
+  }
+  .detail-value { font-size: 0.9rem; color: var(--light); font-weight: 500; }
+
+  /* SERVICES */
+  .services { background: #111; }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; margin-top: 60px;
+  }
+  .service-card {
+    background: #1a1a1a; padding: 40px;
+    position: relative; overflow: hidden;
+    transition: all 0.4s ease;
+    cursor: none;
+  }
+  .service-card::before {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; right: 0; height: 3px;
+    background: var(--red);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .service-card:hover { background: #1e1e1e; transform: translateY(-4px); }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-icon {
+    width: 60px; height: 60px;
+    border: 1px solid rgba(208,32,42,0.3);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px; font-size: 1.8rem;
+    transition: all 0.3s;
+  }
+  .service-card:hover .service-icon {
+    background: var(--red); border-color: var(--red);
+  }
+  .service-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem; position: absolute;
+    top: 20px; right: 30px;
+    color: rgba(255,255,255,0.04); line-height: 1;
+  }
+  .service-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem; margin-bottom: 12px;
+  }
+  .service-desc { color: rgba(255,255,255,0.5); font-size: 0.88rem; line-height: 1.7; }
+  .service-tags {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px;
+  }
+  .tag {
+    font-size: 0.65rem; letter-spacing: 1px;
+    padding: 4px 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+  }
+
+  /* PROJECTS */
+  .projects { background: var(--charcoal); }
+  .projects-header { display: flex; justify-content: space-between; align-items: flex-end; }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px; margin-top: 60px;
+  }
+  .project-card {
+    position: relative; overflow: hidden;
+    cursor: none;
+    background: #1a1a1a;
+  }
+  .project-card.featured {
+    grid-column: span 2;
+  }
+  .project-img {
+    width: 100%;
+    aspect-ratio: 16/9; object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease, filter 0.6s ease;
+    filter: brightness(0.7);
+  }
+  .project-card.featured .project-img { aspect-ratio: 16/8; }
+  .project-card:hover .project-img {
+    transform: scale(1.06);
+    filter: brightness(0.5);
+  }
+  .project-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 30px;
+  }
+  .project-location {
+    font-size: 0.65rem; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--red);
+    margin-bottom: 8px;
+  }
+  .project-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+  }
+  .project-card.featured .project-name { font-size: 1.8rem; }
+  .project-type {
+    font-size: 0.75rem; color: rgba(255,255,255,0.4);
+    margin-top: 6px;
+  }
+  .project-arrow {
+    position: absolute; top: 20px; right: 20px;
+    width: 40px; height: 40px;
+    background: var(--red);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    transform: translateY(-60px); opacity: 0;
+    transition: all 0.3s ease;
+  }
+  .project-card:hover .project-arrow {
+    transform: translateY(0); opacity: 1;
+  }
+
+  /* BRANDS */
+  .brands { background: #111; padding: 80px 60px; }
+  .brands-title {
+    text-align: center;
+    font-size: 0.7rem; letter-spacing: 5px;
+    text-transform: uppercase; color: rgba(255,255,255,0.3);
+    margin-bottom: 50px;
+  }
+  .brands-strip {
+    display: flex; gap: 0; overflow: hidden;
+    position: relative;
+  }
+  .brands-strip::before, .brands-strip::after {
+    content: ''; position: absolute;
+    top: 0; bottom: 0; width: 100px; z-index: 2;
+  }
+  .brands-strip::before { left: 0; background: linear-gradient(to right, #111, transparent); }
+  .brands-strip::after { right: 0; background: linear-gradient(to left, #111, transparent); }
+  .brands-track {
+    display: flex; gap: 60px; align-items: center;
+    animation: brandScroll 25s linear infinite;
+    white-space: nowrap;
+  }
+  .brand-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem; letter-spacing: 3px;
+    color: rgba(255,255,255,0.15); transition: color 0.3s;
+    flex-shrink: 0;
+  }
+  .brand-item:hover { color: rgba(255,255,255,0.7); }
+  @keyframes brandScroll { to { transform: translateX(-50%); } }
+
+  /* SKILLS / EQUIPMENT */
+  .capabilities { background: var(--charcoal); }
+  .cap-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; margin-top: 60px; align-items: start;
+  }
+  .team-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .team-card {
+    background: #1a1a1a; padding: 30px;
+    border-bottom: 3px solid var(--red);
+    text-align: center;
+    transition: transform 0.3s;
+  }
+  .team-card:hover { transform: translateY(-4px); }
+  .team-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem; color: var(--red); display: block;
+  }
+  .team-role { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  
+  .equip-list { }
+  .equip-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: padding-left 0.3s;
+  }
+  .equip-item:hover { padding-left: 12px; }
+  .equip-name { font-size: 0.9rem; color: rgba(255,255,255,0.7); }
+  .equip-qty {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem; color: var(--red);
+  }
+
+  /* CERTIFICATIONS */
+  .certifications { background: #0d0d0d; }
+  .cert-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 30px; margin-top: 60px;
+  }
+  .cert-card {
+    background: #1a1a1a; padding: 40px;
+    border: 1px solid rgba(255,255,255,0.05);
+    position: relative; overflow: hidden;
+    transition: all 0.3s;
+  }
+  .cert-card:hover {
+    border-color: var(--red);
+    transform: translateY(-4px);
+  }
+  .cert-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(to right, var(--red), var(--gold));
+  }
+  .cert-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem; letter-spacing: 2px;
+    color: var(--gold); margin-bottom: 16px;
+  }
+  .cert-title { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 8px; }
+  .cert-desc { font-size: 0.88rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
+
+  /* CONTACT */
+  .contact { background: var(--charcoal); }
+  .contact-wrap {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; margin-top: 60px;
+  }
+  .contact-info {}
+  .contact-big {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 6vw, 6rem);
+    line-height: 1; color: var(--red);
+    margin-bottom: 40px;
+  }
+  .contact-detail {
+    display: flex; align-items: flex-start; gap: 20px;
+    margin-bottom: 30px; padding-bottom: 30px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .contact-icon {
+    width: 44px; height: 44px; background: rgba(208,32,42,0.1);
+    border: 1px solid rgba(208,32,42,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+  }
+  .contact-label {
+    font-size: 0.65rem; letter-spacing: 2px;
+    text-transform: uppercase; color: rgba(255,255,255,0.3);
+    margin-bottom: 4px;
+  }
+  .contact-value {
+    font-size: 1rem; color: var(--light);
+    font-weight: 500;
+  }
+  .contact-form { background: #111; padding: 50px; }
+  .form-group { margin-bottom: 24px; }
+  .form-group label {
+    display: block; font-size: 0.65rem;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,0.3); margin-bottom: 8px;
+  }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%; background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--light); padding: 14px 16px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+    transition: border-color 0.3s; outline: none;
+    appearance: none;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+    border-color: var(--red);
+  }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* FOOTER */
+  footer {
+    background: #080808; padding: 60px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .footer-inner {
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem; letter-spacing: 4px;
+  }
+  .footer-brand span { color: var(--red); }
+  .footer-tagline {
+    font-size: 0.75rem; color: rgba(255,255,255,0.3);
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .footer-copy { color: rgba(255,255,255,0.3); font-size: 0.8rem; }
+  .footer-gst {
+    color: rgba(255,255,255,0.2); font-size: 0.75rem; margin-top: 4px;
+  }
+
+  /* REVEAL ANIMATIONS */
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.visible {
+    opacity: 1; transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+  .reveal-delay-5 { transition-delay: 0.5s; }
+
+  /* MARQUEE BAR */
+  .marquee-bar {
+    background: var(--red); padding: 16px 0;
+    overflow: hidden; display: flex;
+  }
+  .marquee-track {
+    display: flex; gap: 60px; align-items: center;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem; letter-spacing: 4px;
+    color: rgba(255,255,255,0.8); flex-shrink: 0;
+    display: flex; align-items: center; gap: 60px;
+  }
+  .marquee-dot {
+    width: 6px; height: 6px; background: rgba(255,255,255,0.4); border-radius: 50%;
+  }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+
+  /* PROGRESS BARS */
+  .skill-bar { margin-bottom: 20px; }
+  .skill-label {
+    display: flex; justify-content: space-between;
+    font-size: 0.8rem; margin-bottom: 8px;
+    color: rgba(255,255,255,0.6);
+  }
+  .skill-track {
+    height: 4px; background: rgba(255,255,255,0.07);
+    position: relative; overflow: hidden;
+  }
+  .skill-fill {
+    position: absolute; top: 0; left: 0; height: 100%;
+    background: linear-gradient(to right, var(--red), var(--gold));
+    width: 0; transition: width 1.5s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    nav.scrolled { padding: 14px 24px; }
+    .nav-links { display: none; }
+    section { padding: 80px 24px; }
+    .hero-content { padding: 0 24px; }
+    .hero-stats { right: 24px; gap: 30px; }
+    .about-grid, .contact-wrap, .cap-grid { grid-template-columns: 1fr; gap: 40px; }
+    .services-grid, .cert-grid { grid-template-columns: 1fr 1fr; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .project-card.featured { grid-column: span 1; }
+    footer { padding: 40px 24px; }
+    .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
+    .brands { padding: 60px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">BBC</div>
+  <div class="loader-bar"></div>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">BUILD <span>BRO</span> CO.</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#capabilities">Team</a></li>
+    <li><a href="#contact" class="nav-cta">Get Quote</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-tag">Mumbai · Pune · Nasik · Gujarat</div>
+    <h1 class="hero-title">
+      <span class="line"><span>BUILD</span></span>
+      <span class="line"><span class="accent-red">BRO</span></span>
+      <span class="line"><span>CO.</span></span>
+    </h1>
+    <p class="hero-desc">Engineers & Contractors specializing in Construction, Rehabilitation of old Structures and Turnkey Engineering Projects. <em>Protecting Dreams with Concrete Solutions.</em></p>
+    <div class="hero-buttons">
+      <a href="#projects" class="btn-primary">View Projects ↗</a>
+      <a href="#contact" class="btn-outline">Get In Touch</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <span class="stat-num" data-target="6">0</span>
+      <div class="stat-label">Years Active</div>
+    </div>
+    <div class="stat">
+      <span class="stat-num" data-target="50">0</span>
+      <div class="stat-label">Projects Done</div>
+    </div>
+    <div class="stat">
+      <span class="stat-num" data-target="16">0</span>
+      <div class="stat-label">Team Members</div>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span>Scroll to explore</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-bar">
+  <div class="marquee-track" id="marqueeTrack">
+    <div class="marquee-item">STRUCTURAL REPAIR <span class="marquee-dot"></span> WATERPROOFING <span class="marquee-dot"></span> CIVIL WORK <span class="marquee-dot"></span> PAINTING <span class="marquee-dot"></span> PLUMBING <span class="marquee-dot"></span> REHABILITATION <span class="marquee-dot"></span> GUNITING <span class="marquee-dot"></span> TERRACE SOLUTIONS <span class="marquee-dot"></span></div>
+    <div class="marquee-item">STRUCTURAL REPAIR <span class="marquee-dot"></span> WATERPROOFING <span class="marquee-dot"></span> CIVIL WORK <span class="marquee-dot"></span> PAINTING <span class="marquee-dot"></span> PLUMBING <span class="marquee-dot"></span> REHABILITATION <span class="marquee-dot"></span> GUNITING <span class="marquee-dot"></span> TERRACE SOLUTIONS <span class="marquee-dot"></span></div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="section-tag reveal">About the Firm</div>
+  <div class="about-grid">
+    <div class="about-left reveal">
+      <div class="about-img-wrap">
+        <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&q=80" alt="Bhagesh Aakhade">
+        <div class="about-badge">
+          <span class="badge-num">6+</span>
+          <span class="badge-text">Years of Excellence</span>
+        </div>
+      </div>
+    </div>
+    <div class="about-right">
+      <h2 class="section-title reveal">Mr. Bhagesh<br><em>Shankar Aakhade</em></h2>
+      <p class="about-desc reveal reveal-delay-1">Established in 2020, Build Bro Co. Engineers & Contractors has built a solid reputation in civil repairs and rehabilitation across Mumbai, Pune, Nasik and Gujarat. Led by Mr. Bhagesh Shankar Aakhade, the firm combines dedication, honesty and a sincere working culture to deliver unmatched quality.</p>
+      <div class="about-mission reveal reveal-delay-2">
+        <div class="mission-label">Our Mission</div>
+        <div class="mission-text">"Protect Dreams with Concrete Solutions"</div>
+      </div>
+      <div class="about-desc reveal reveal-delay-3">Involved in Rehabilitation, Restoration, Repairs and Painting of Buildings — the company follows a multi-point quality control system with constant monitoring of materials and processes, inculcated through regular training programmes.</div>
+      <div class="about-details reveal reveal-delay-3">
+        <div class="detail-item">
+          <div class="detail-label">Contact</div>
+          <div class="detail-value">9773198965</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Email</div>
+          <div class="detail-value">buildbroco@gmail.com</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">GST No.</div>
+          <div class="detail-value">27AWGPA9688Q1ZJ</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">PAN No.</div>
+          <div class="detail-value">AWGPA9688Q</div>
+        </div>
+        <div class="detail-item" style="grid-column:span 2">
+          <div class="detail-label">Office Address</div>
+          <div class="detail-value">Room No.4, Shree Sai Krupa Soc., Someshwar Nagar, Parksite, Vikhroli West, Mumbai – 400079</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="section-tag reveal">What We Do</div>
+  <h2 class="section-title reveal">Our<br><em>Core Services</em></h2>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-num">01</div>
+      <div class="service-icon">🏗️</div>
+      <h3 class="service-title">Structural Survey & Repair</h3>
+      <p class="service-desc">Full structural audit including internal and external surveys with detailed measurements. We identify and fix cracks, sagging ceilings, foundation issues and bowing walls.</p>
+      <div class="service-tags">
+        <span class="tag">Foundation</span><span class="tag">Crack Filling</span><span class="tag">RCC Repair</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-num">02</div>
+      <div class="service-icon">💧</div>
+      <h3 class="service-title">Waterproofing</h3>
+      <p class="service-desc">Terrace, balcony, bathroom waterproofing using premium chemical coatings. Expert terrace leakage diagnosis with ponding tests and brickbat coba systems.</p>
+      <div class="service-tags">
+        <span class="tag">Terrace</span><span class="tag">Balcony</span><span class="tag">Water Tank</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-num">03</div>
+      <div class="service-icon">🧱</div>
+      <h3 class="service-title">Civil Work</h3>
+      <p class="service-desc">Plasterwork (internal & external), recasting of RCC members, brick work, gunning, injection grouting to RCC elements and crack filling.</p>
+      <div class="service-tags">
+        <span class="tag">Plaster</span><span class="tag">Brick Work</span><span class="tag">Guniting</span>
+      </div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-num">04</div>
+      <div class="service-icon">🎨</div>
+      <h3 class="service-title">Painting</h3>
+      <p class="service-desc">Specialists in coatings — textured, elastomeric, waterproof painting, internal decorative painting, wood polish, and enamel painting for all structures.</p>
+      <div class="service-tags">
+        <span class="tag">Exterior</span><span class="tag">Interior</span><span class="tag">Waterproof</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-num">05</div>
+      <div class="service-icon">🔧</div>
+      <h3 class="service-title">Plumbing</h3>
+      <p class="service-desc">Survey, service and repair of plumbing works and fixtures. Providing and fixing UPVC/CPVC/GI/PVC plumbing lines and repairing junction leakages.</p>
+      <div class="service-tags">
+        <span class="tag">UPVC</span><span class="tag">Re-piping</span><span class="tag">Joints</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-num">06</div>
+      <div class="service-icon">🏢</div>
+      <h3 class="service-title">Premises & Paving</h3>
+      <p class="service-desc">Interlocking pavers, paver block installation, concrete tiles for driveways, patios and walkways — adding aesthetic appeal and durability.</p>
+      <div class="service-tags">
+        <span class="tag">Pavers</span><span class="tag">Driveway</span><span class="tag">Tiles</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="projects" id="projects">
+  <div class="projects-header">
+    <div>
+      <div class="section-tag reveal">Portfolio</div>
+      <h2 class="section-title reveal">Completed &<br><em>Working Projects</em></h2>
+    </div>
+    <p class="reveal" style="color:rgba(255,255,255,0.4);max-width:280px;text-align:right;font-size:0.85rem;line-height:1.7">Delivering quality across Mumbai, Thane, Bhandup, Mulund, Khopoli and Ratnagiri.</p>
+  </div>
+  <div class="projects-grid">
+    <div class="project-card featured reveal">
+      <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=900&q=80" alt="Mayflower" class="project-img">
+      <div class="project-overlay">
+        <div class="project-location">Thane (W) · Completed</div>
+        <div class="project-name">Mayflower CHSL</div>
+        <div class="project-type">External Painting & Structural Repair · High-Rise</div>
+      </div>
+      <div class="project-arrow">↗</div>
+    </div>
+    <div class="project-card reveal reveal-delay-1">
+      <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=500&q=80" alt="Swati Complex" class="project-img">
+      <div class="project-overlay">
+        <div class="project-location">Khopoli · Completed</div>
+        <div class="project-name">Swati Complex</div>
+        <div class="project-type">Civil Work & Paving</div>
+      </div>
+      <div class="project-arrow">↗</div>
+    </div>
+    <div class="project-card reveal reveal-delay-1">
+      <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=500&q=80" alt="Dhirajdream" class="project-img">
+      <div class="project-overlay">
+        <div class="project-location">Bhandup (W) · Completed</div>
+        <div class="project-name">DhirajDream Bldg.03</div>
+        <div class="project-type">Exterior Painting</div>
+      </div>
+      <div class="project-arrow">↗</div>
+    </div>
+    <div class="project-card reveal reveal-delay-2">
+      <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=500&q=80" alt="Sarnath" class="project-img">
+      <div class="project-overlay">
+        <div class="project-location">Thane (W) · Completed</div>
+        <div class="project-name">Sarnath CHSL</div>
+        <div class="project-type">Painting & Repair</div>
+      </div>
+      <div class="project-arrow">↗</div>
+    </div>
+    <div class="project-card reveal reveal-delay-2">
+      <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=500&q=80" alt="Laxmi Plazza" class="project-img">
+      <div class="project-overlay">
+        <div class="project-location">Thane (W) · Completed</div>
+        <div class="project-name">Laxmi Plazza CHSL</div>
+        <div class="project-type">Exterior Wall Painting</div>
+      </div>
+      <div class="project-arrow">↗</div>
+    </div>
+    <div class="project-card reveal reveal-delay-3">
+      <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=500&q=80" alt="Vijay Tower" class="project-img">
+      <div class="project-overlay">
+        <div class="project-location">Thane (E) · In Progress</div>
+        <div class="project-name">Vijay Tower</div>
+        <div class="project-type">Structural & Painting</div>
+      </div>
+      <div class="project-arrow">↗</div>
+    </div>
+  </div>
+</section>
+
+<!-- BRANDS -->
+<div class="brands">
+  <div class="brands-title">Authorized Applicator — Associated with India's Best Brands</div>
+  <div class="brands-strip">
+    <div class="brands-track" id="brandsTrack">
+      <span class="brand-item">ASIAN PAINTS</span>
+      <span class="brand-item">ICI DULUX</span>
+      <span class="brand-item">DR. FIXIT (PIDILITE)</span>
+      <span class="brand-item">BERGER</span>
+      <span class="brand-item">JOTUN</span>
+      <span class="brand-item">NEROLAC</span>
+      <span class="brand-item">AKZONOBEL</span>
+      <span class="brand-item">CREAMCEM</span>
+      <span class="brand-item">ASTRAL PIPES</span>
+      <span class="brand-item">PRINCE PIPES</span>
+      <span class="brand-item">ASIAN PAINTS</span>
+      <span class="brand-item">ICI DULUX</span>
+      <span class="brand-item">DR. FIXIT (PIDILITE)</span>
+      <span class="brand-item">BERGER</span>
+      <span class="brand-item">JOTUN</span>
+      <span class="brand-item">NEROLAC</span>
+      <span class="brand-item">AKZONOBEL</span>
+      <span class="brand-item">CREAMCEM</span>
+      <span class="brand-item">ASTRAL PIPES</span>
+      <span class="brand-item">PRINCE PIPES</span>
+    </div>
+  </div>
+</div>
+
+<!-- CAPABILITIES -->
+<section class="capabilities" id="capabilities">
+  <div class="section-tag reveal">Our Strength</div>
+  <h2 class="section-title reveal">Team &<br><em>Equipment</em></h2>
+  <div class="cap-grid">
+    <div>
+      <p class="about-desc reveal" style="margin-bottom:40px">A dedicated team of professionals equipped with industry-grade machinery to take on projects of any scale — from residential societies to large commercial towers.</p>
+      <div class="team-stats reveal reveal-delay-1">
+        <div class="team-card">
+          <span class="team-num">02</span>
+          <div class="team-role">Project Managers</div>
+        </div>
+        <div class="team-card">
+          <span class="team-num">02</span>
+          <div class="team-role">Project Incharges</div>
+        </div>
+        <div class="team-card">
+          <span class="team-num">04</span>
+          <div class="team-role">Support Staff</div>
+        </div>
+        <div class="team-card">
+          <span class="team-num">08</span>
+          <div class="team-role">Office Team</div>
+        </div>
+      </div>
+      <div style="margin-top:50px" class="reveal reveal-delay-2">
+        <div class="section-tag" style="margin-bottom:24px">Core Expertise</div>
+        <div class="skill-bar">
+          <div class="skill-label"><span>Waterproofing & Terrace Repair</span><span>95%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-width="95"></div></div>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-label"><span>Structural Repair</span><span>92%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-width="92"></div></div>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-label"><span>External / Internal Painting</span><span>97%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-width="97"></div></div>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-label"><span>Plumbing Works</span><span>88%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-width="88"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <div class="section-tag" style="margin-bottom:24px">Equipment Inventory</div>
+      <div class="equip-list">
+        <div class="equip-item"><span class="equip-name">Concrete Mixer</span><span class="equip-qty">1 NOS</span></div>
+        <div class="equip-item"><span class="equip-name">Lift Machine</span><span class="equip-qty">3 NOS</span></div>
+        <div class="equip-item"><span class="equip-name">Bamboo Scaffolding</span><span class="equip-qty">20,000 NOS</span></div>
+        <div class="equip-item"><span class="equip-name">Steel Shuttering Plates</span><span class="equip-qty">1,500 NOS</span></div>
+        <div class="equip-item"><span class="equip-name">Steel Props</span><span class="equip-qty">800 NOS</span></div>
+        <div class="equip-item"><span class="equip-name">M.S. Span</span><span class="equip-qty">400 NOS</span></div>
+        <div class="equip-item"><span class="equip-name">M.S. H-Frame</span><span class="equip-qty">300 SETS</span></div>
+        <div class="equip-item"><span class="equip-name">Guniting Machine</span><span class="equip-qty">2 NOS</span></div>
+        <div class="equip-item"><span class="equip-name">Vibrators</span><span class="equip-qty">10 NOS</span></div>
+        <div class="equip-item"><span class="equip-name">Ply Shuttering</span><span class="equip-qty">10,000 SQ.FT.</span></div>
+        <div class="equip-item"><span class="equip-name">Welding Machines</span><span class="equip-qty">2 NOS</span></div>
+        <div class="equip-item"><span class="equip-name">Water Pumps</span><span class="equip-qty">4 NOS</span></div>
+        <div class="equip-item"><span class="equip-name">Theodolite</span><span class="equip-qty">1 NOS</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section class="certifications" id="certifications">
+  <div class="section-tag reveal">Credentials</div>
+  <h2 class="section-title reveal">Approved &<br><em>Authorized</em></h2>
+  <div class="cert-grid">
+    <div class="cert-card reveal">
+      <div class="cert-logo">ASIAN PAINTS</div>
+      <div class="cert-title">Authorized Applicator · BP No. 4468090</div>
+      <div class="cert-desc">Confirmed Authorized Applicator executing prestigious projects. Overall workmanship and quality at various sites found to be good.</div>
+    </div>
+    <div class="cert-card reveal reveal-delay-1">
+      <div class="cert-logo">DULUX / AKZONOBEL</div>
+      <div class="cert-title">Recommended Applicator · Code 2501242771</div>
+      <div class="cert-desc">Certified for Dulux range of products across Mumbai/Thane District. AkzoNobel satisfied with the quality of Application.</div>
+    </div>
+    <div class="cert-card reveal reveal-delay-2">
+      <div class="cert-logo">DR. FIXIT · PIDILITE</div>
+      <div class="cert-title">Registered Applicator · Code CON219356</div>
+      <div class="cert-desc">Confirmed applicator for waterproofing contractor for 2024–2025. Workmanship in coating and waterproofing found satisfactory.</div>
+    </div>
+    <div class="cert-card reveal reveal-delay-3">
+      <div class="cert-logo">GST REGISTERED</div>
+      <div class="cert-title">GST No. 27AWGPA9688Q1ZJ</div>
+      <div class="cert-desc">Fully GST registered firm (Proprietorship) under BHAGESH SHANKAR AAKHADE. Registration valid from 06/11/2025. Maharashtra — Regular taxpayer.</div>
+    </div>
+    <div class="cert-card reveal reveal-delay-4">
+      <div class="cert-logo">ASTRAL / PRINCE</div>
+      <div class="cert-title">Plumbing Installer</div>
+      <div class="cert-desc">Authorized installer for Astral Pipes and Prince Piping Systems. Executing prestigious plumbing projects with quality workmanship.</div>
+    </div>
+    <div class="cert-card reveal reveal-delay-5">
+      <div class="cert-logo">HSE POLICY</div>
+      <div class="cert-title">In-House Safety Standards</div>
+      <div class="cert-desc">OSHA-10 hour trained HSE officers. "Finest 30 Minutes" housekeeping system ensures safe, clean sites throughout every project.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="section-tag reveal">Let's Build Together</div>
+  <div class="contact-wrap">
+    <div class="contact-info">
+      <div class="contact-big reveal">GET IN<br>TOUCH</div>
+      <p class="about-desc reveal">Ready to protect and restore your structure? Reach out for a free site survey and detailed quotation.</p>
+      <div class="contact-detail reveal reveal-delay-1">
+        <div class="contact-icon">📞</div>
+        <div>
+          <div class="contact-label">Phone</div>
+          <div class="contact-value">+91 9773198965</div>
+        </div>
+      </div>
+      <div class="contact-detail reveal reveal-delay-2">
+        <div class="contact-icon">✉️</div>
+        <div>
+          <div class="contact-label">Email</div>
+          <div class="contact-value">buildbroco@gmail.com</div>
+        </div>
+      </div>
+      <div class="contact-detail reveal reveal-delay-3">
+        <div class="contact-icon">📍</div>
+        <div>
+          <div class="contact-label">Office</div>
+          <div class="contact-value">Room No.4, Shree Sai Krupa Soc., Someshwar Nagar, Parksite, Vikhroli West, Mumbai – 400079</div>
+        </div>
+      </div>
+      <div class="contact-detail reveal reveal-delay-4" style="border:none">
+        <div class="contact-icon">🏦</div>
+        <div>
+          <div class="contact-label">Bank — Bharat Co.Op. Bank</div>
+          <div class="contact-value" style="font-size:0.85rem">A/c: 010512100001782 · IFSC: BCBM00000862</div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-form reveal reveal-delay-2">
+      <div class="section-tag" style="margin-bottom:30px">Send a Message</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" placeholder="Rahul Sharma">
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" placeholder="+91 98765 43210">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" placeholder="you@email.com">
+      </div>
+      <div class="form-group">
+        <label>Type of Work</label>
+        <select>
+          <option>Select service...</option>
+          <option>Structural Survey & Repair</option>
+          <option>Waterproofing</option>
+          <option>External / Internal Painting</option>
+          <option>Plumbing</option>
+          <option>Civil Work</option>
+          <option>Premises & Paving</option>
+          <option>Full Building Rehabilitation</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Project Location & Details</label>
+        <textarea placeholder="Society name, area, type of building, approximate scope of work..."></textarea>
+      </div>
+      <button class="btn-primary" style="width:100%;justify-content:center;border:none;" onclick="alert('Message sent! We will contact you within 24 hours.')">Send Message ↗</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">BUILD <span>BRO</span> CO.</div>
+      <div class="footer-tagline">Engineers & Contractors · Est. 2020</div>
+      <div class="footer-gst">GST: 27AWGPA9688Q1ZJ · PAN: AWGPA9688Q</div>
+    </div>
+    <div style="text-align:right">
+      <div class="footer-copy">© 2025 Build Bro Co. Engineers & Contractors</div>
+      <div class="footer-copy" style="margin-top:8px">Mumbai · Pune · Nasik · Gujarat</div>
+      <div class="footer-gst" style="margin-top:8px">All rights reserved · Proprietor: Bhagesh Shankar Aakhade</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// LOADER
+window.addEventListener('load', () => {
+  const loader = document.getElementById('loader');
+  loader.classList.add('loader-out');
+  setTimeout(() => { loader.style.display = 'none'; }, 2800);
+});
+
+// CURSOR
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animateCursor() {
+  cursor.style.left = mx - 6 + 'px';
+  cursor.style.top = my - 6 + 'px';
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx - 20 + 'px';
+  ring.style.top = ry - 20 + 'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+// NAVBAR SCROLL
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 80);
+});
+
+// COUNTER ANIMATION
+function animateCounter(el) {
+  const target = parseInt(el.dataset.target);
+  let current = 0;
+  const step = target / 60;
+  const timer = setInterval(() => {
+    current += step;
+    if (current >= target) { el.textContent = target + '+'; clearInterval(timer); }
+    else { el.textContent = Math.floor(current); }
+  }, 30);
+}
+const counters = document.querySelectorAll('[data-target]');
+const counterObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) { animateCounter(e.target); counterObs.unobserve(e.target); } });
+}, { threshold: 0.5 });
+counters.forEach(c => counterObs.observe(c));
+
+// REVEAL ANIMATION
+const reveals = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) { e.target.classList.add('visible'); }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+reveals.forEach(r => revealObs.observe(r));
+
+// SKILL BARS
+const skillBars = document.querySelectorAll('.skill-fill');
+const skillObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      e.target.style.width = e.target.dataset.width + '%';
+      skillObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+skillBars.forEach(b => skillObs.observe(b));
+
+// SMOOTH SECTION LINKS
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const el = document.querySelector(a.getAttribute('href'));
+    if(el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>
